@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "api:generate": "orval"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.90.12",
@@ -26,6 +27,7 @@
     "eslint-config-next": "16.0.10",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
+    "orval": "^7.17.0",
     "prettier": "^3.7.4",
     "tailwindcss": "^4",
     "typescript": "^5"

@@ -1,0 +1,807 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "description": "Endpoint to user login using email and password.",
+        "operationId": "LoginRestController_execute",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "Login requires username and password.",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RequestLoginRequestBody" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The user access token.",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ResponseLogin" } }
+            }
+          },
+          "400": {
+            "description": "If any required params are missing or has invalid format or type."
+          },
+          "401": { "description": "User authentication failed." },
+          "422": {
+            "description": "If any required params are missing or has invalid format or type."
+          }
+        },
+        "summary": "User login.",
+        "tags": ["Auth"]
+      }
+    },
+    "/auth/refresh-token": {
+      "post": {
+        "description": "Endpoint to user get a new access token using a expired access token.",
+        "operationId": "RefreshTokenRestController_execute",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "RefreshToken requires access token expired.",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RefreshTokenRestRequestBody" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The user access token.",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ResponseLogin" } }
+            }
+          },
+          "400": {
+            "description": "If any required params are missing or has invalid format or type."
+          },
+          "401": { "description": "Access token authentication failed." },
+          "422": {
+            "description": "If any required params are missing or has invalid format or type."
+          }
+        },
+        "summary": "User get a new access token.",
+        "tags": ["Auth"]
+      }
+    },
+    "/auth/forgot-password": {
+      "post": {
+        "description": "Endpoint to create a new forgot password.",
+        "operationId": "CreateForgotPasswordRestController_execute",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "CreateForgotPassword requires user email.",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateUserForgotPasswordRequestBody" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The forgot password created.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ResponseToCreateUserForgotPassword" }
+              }
+            }
+          },
+          "400": {
+            "description": "If any required params are missing or has invalid format or type."
+          },
+          "401": { "description": "Access token authentication failed." },
+          "422": {
+            "description": "If any required params are missing or has invalid format or type."
+          }
+        },
+        "summary": "User create forgot password.",
+        "tags": ["Auth"]
+      }
+    },
+    "/auth/forgot-password/{id}": {
+      "patch": {
+        "description": "Endpoint to update forgot password.",
+        "operationId": "UpdateForgotPasswordRestController_execute",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "User Forgot Password id",
+            "schema": {}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "UpdateForgotPassword requires id, code, new password and new password confirmation.",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateUserForgotPasswordRequestBody" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The forgot password updated.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ResponseToUpdateUserForgotPassword" }
+              }
+            }
+          },
+          "400": {
+            "description": "If any required params are missing or has invalid format or type."
+          },
+          "401": { "description": "Access token authentication failed." },
+          "422": {
+            "description": "If any required params are missing or has invalid format or type."
+          }
+        },
+        "summary": "User update forgot password.",
+        "tags": ["Auth"]
+      }
+    },
+    "/users": {
+      "post": {
+        "operationId": "CreateUserController_execute",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "Create a new user",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateUserRequestBody" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The user has been successfully created.",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ResponseUser" } }
+            }
+          },
+          "400": {
+            "description": "Invalid input, object invalid.",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } }
+            }
+          }
+        },
+        "summary": "Create a new user",
+        "tags": ["Users"]
+      }
+    },
+    "/users/{id}": {
+      "delete": {
+        "description": "The user ID must be provided",
+        "operationId": "DeleteUserController_execute",
+        "parameters": [
+          { "name": "id", "required": true, "in": "path", "description": "User ID", "schema": {} }
+        ],
+        "responses": {
+          "200": { "description": "User successfully deleted" },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } }
+            }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "Performs a soft delete operation",
+        "tags": ["Users"]
+      },
+      "get": {
+        "description": "Retrieve a user by their unique ID",
+        "operationId": "GetUserByIdController_execute",
+        "parameters": [
+          { "name": "id", "required": true, "in": "path", "description": "User id", "schema": {} }
+        ],
+        "responses": {
+          "200": {
+            "description": "User retrieved successfully",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ResponseUser" } }
+            }
+          },
+          "204": { "description": "No user found with the given ID" },
+          "400": {
+            "description": "Invalid user ID",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } }
+            }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "Get user by ID",
+        "tags": ["Users"]
+      },
+      "patch": {
+        "description": "Update a user's details by their unique ID",
+        "operationId": "UpdateUserByIdController_execute",
+        "parameters": [
+          { "name": "id", "required": true, "in": "path", "description": "User id", "schema": {} }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Update an user",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateUserRequestBody" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User updated successfully",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ResponseUser" } }
+            }
+          },
+          "204": { "description": "No content" },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } }
+            }
+          },
+          "404": { "description": "User not found" },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } }
+            }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "Update user by ID",
+        "tags": ["Users"]
+      }
+    },
+    "/users/by-email/{email}": {
+      "get": {
+        "description": "Retrieve a user by their email address.",
+        "operationId": "GetUserByEmailController_execute",
+        "parameters": [
+          {
+            "name": "email",
+            "required": true,
+            "in": "path",
+            "description": "User email",
+            "schema": {}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User retrieved successfully.",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ResponseUser" } }
+            }
+          },
+          "204": { "description": "No user found with the provided email." },
+          "400": {
+            "description": "Invalid email format.",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } }
+            }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "Get user by email",
+        "tags": ["Users"]
+      }
+    },
+    "/users/testing/{id}": {
+      "delete": {
+        "description": "This is intended for testing purposes only. This endpoint is disabled in production.",
+        "operationId": "HardDeleteUserController_execute",
+        "parameters": [
+          { "name": "id", "required": true, "in": "path", "description": "User ID", "schema": {} }
+        ],
+        "responses": {
+          "200": { "description": "" },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } }
+            }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "Performs a hard delete operation",
+        "tags": ["Users"]
+      }
+    },
+    "/nortus-v1/chat": {
+      "get": {
+        "description": "Retrieve chat mock data",
+        "operationId": "GetChatController_execute",
+        "parameters": [],
+        "responses": {
+          "200": { "description": "Chat data retrieved successfully" },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } }
+            }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "Get chat data",
+        "tags": ["Nortus V1"]
+      }
+    },
+    "/nortus-v1/dashboard": {
+      "get": {
+        "description": "Retrieve dashboard mock data",
+        "operationId": "GetDashboardController_execute",
+        "parameters": [],
+        "responses": {
+          "200": { "description": "Dashboard data retrieved successfully" },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } }
+            }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "Get dashboard data",
+        "tags": ["Nortus V1"]
+      }
+    },
+    "/nortus-v1/simulador-planos": {
+      "get": {
+        "description": "Retrieve simulador planos mock data",
+        "operationId": "GetSimuladorPlanosController_execute",
+        "parameters": [],
+        "responses": {
+          "200": { "description": "Simulador planos data retrieved successfully" },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } }
+            }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "Get simulador planos data",
+        "tags": ["Nortus V1"]
+      }
+    },
+    "/tickets": {
+      "post": {
+        "operationId": "CreateTicketController_execute",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "Create a new ticket",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateTicketRequestBody" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The ticket has been successfully created.",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ResponseTicket" } }
+            }
+          },
+          "400": {
+            "description": "Invalid input, object invalid.",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } }
+            }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "Create a new ticket",
+        "tags": ["Tickets"]
+      },
+      "get": {
+        "description": "Retrieve all tickets accessible to the logged user",
+        "operationId": "ListTicketsByFilterController_execute",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Tickets retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ResponseTicketPaginated" }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } }
+            }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "List tickets",
+        "tags": ["Tickets"]
+      }
+    },
+    "/tickets/{id}": {
+      "get": {
+        "description": "Retrieve a ticket by their unique ID",
+        "operationId": "GetTicketByIdController_execute",
+        "parameters": [
+          { "name": "id", "required": true, "in": "path", "description": "Ticket id", "schema": {} }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ticket retrieved successfully",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ResponseTicket" } }
+            }
+          },
+          "204": { "description": "No ticket found with the given ID" },
+          "400": {
+            "description": "Invalid ticket ID",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } }
+            }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "Get ticket by ID",
+        "tags": ["Tickets"]
+      },
+      "patch": {
+        "description": "Update a ticket's details by their unique ID",
+        "operationId": "UpdateTicketController_execute",
+        "parameters": [
+          { "name": "id", "required": true, "in": "path", "description": "Ticket id", "schema": {} }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Update a ticket",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateTicketRequestBody" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ticket updated successfully",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ResponseTicket" } }
+            }
+          },
+          "204": { "description": "No content" },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } }
+            }
+          },
+          "404": { "description": "Ticket not found" },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } }
+            }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "Update ticket by ID",
+        "tags": ["Tickets"]
+      },
+      "delete": {
+        "description": "The ticket ID must be provided",
+        "operationId": "DeleteTicketController_execute",
+        "parameters": [
+          { "name": "id", "required": true, "in": "path", "description": "Ticket ID", "schema": {} }
+        ],
+        "responses": {
+          "200": { "description": "Ticket successfully deleted" },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } }
+            }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "Performs a soft delete operation",
+        "tags": ["Tickets"]
+      }
+    },
+    "/seed/tickets": {
+      "post": {
+        "description": "Reset and populate tickets table with data from JSON files",
+        "operationId": "SeedTicketsController_execute",
+        "parameters": [],
+        "responses": {
+          "200": { "description": "Tickets seeded successfully" },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } }
+            }
+          }
+        },
+        "summary": "Seed tickets",
+        "tags": ["Seed"]
+      }
+    },
+    "/map/locations": {
+      "get": {
+        "description": "Retrieve mapa locations data from locations.json file",
+        "operationId": "GetMapaController_execute",
+        "parameters": [],
+        "responses": {
+          "200": { "description": "Mapa locations data retrieved successfully" },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } }
+            }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "Get mapa locations data",
+        "tags": ["Map"]
+      }
+    },
+    "/metrics": {
+      "get": {
+        "operationId": "PrometheusController_getMetrics",
+        "parameters": [],
+        "responses": { "200": { "description": "" } },
+        "tags": ["Metrics"]
+      }
+    }
+  },
+  "info": {
+    "title": "NODE-LEAP API",
+    "description": "Nortus Challenge is a node boilerplate that follows best practicles of software design and agile.",
+    "version": "0.0.1",
+    "contact": {},
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/loomi/nortus-challenge/blob/leap-v2/LICENSE"
+    }
+  },
+  "tags": [],
+  "servers": [
+    {
+      "url": "https://nortus-challenge.api.stage.loomi.com.br",
+      "description": "local",
+      "variables": { "local": { "default": "true" } }
+    }
+  ],
+  "components": {
+    "securitySchemes": { "bearer": { "scheme": "bearer", "bearerFormat": "JWT", "type": "http" } },
+    "schemas": {
+      "RequestLoginRequestBody": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string", "format": "email", "description": "User email" },
+          "password": { "type": "string", "description": "User password" }
+        },
+        "required": ["email", "password"]
+      },
+      "ResponseLogin": {
+        "type": "object",
+        "properties": { "access_token": { "type": "string", "description": "User access_token" } },
+        "required": ["access_token"]
+      },
+      "RefreshTokenRestRequestBody": {
+        "type": "object",
+        "properties": { "access_token": { "type": "string" } },
+        "required": ["access_token"]
+      },
+      "CreateUserForgotPasswordRequestBody": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string", "format": "email", "description": "User email" }
+        },
+        "required": ["email"]
+      },
+      "ResponseToCreateUserForgotPassword": {
+        "type": "object",
+        "properties": { "id": { "type": "string", "description": "User email" } },
+        "required": ["id"]
+      },
+      "UpdateUserForgotPasswordRequestBody": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid", "description": "User forgot password id" },
+          "code": { "type": "string", "minLength": 5, "description": "Code to update password" },
+          "new_password": { "type": "string", "description": "New password" }
+        },
+        "required": ["id", "code", "new_password"]
+      },
+      "ResponseToUpdateUserForgotPassword": {
+        "type": "object",
+        "properties": {
+          "access_token": { "type": "string", "description": "User access_token" },
+          "state": { "type": "string", "enum": ["PENDING", "CONFIRMED", "DECLINED", "EXPIRED"] }
+        },
+        "required": ["access_token", "state"]
+      },
+      "CreateUserRequestBody": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "description": "User name" },
+          "password": { "type": "string", "description": "User password" },
+          "email": { "type": "string", "format": "email", "description": "User email" },
+          "challengeLevel": {
+            "default": 1,
+            "type": "integer",
+            "minimum": 1,
+            "description": "User challenge level"
+          }
+        },
+        "required": ["name", "password", "email"]
+      },
+      "ResponseUser": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid", "description": "User ID" },
+          "name": { "type": "string", "description": "User name" },
+          "email": { "type": "string", "format": "email", "description": "User email" },
+          "state": {
+            "type": "string",
+            "enum": ["CONFIRMED", "PENDING_CONFIRMATION"],
+            "description": "User state"
+          }
+        },
+        "required": ["id", "name", "email", "state"]
+      },
+      "ApiError": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "string" },
+          "message": { "type": "string" },
+          "status": { "type": "number" }
+        },
+        "required": ["code", "message", "status"]
+      },
+      "UpdateUserRequestBody": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string", "format": "email", "description": "User email" },
+          "name": { "type": "string", "description": "User name" },
+          "state": {
+            "type": "string",
+            "enum": ["CONFIRMED", "PENDING_CONFIRMATION"],
+            "description": "User state"
+          }
+        }
+      },
+      "CreateTicketRequestBody": {
+        "type": "object",
+        "properties": {
+          "ticketId": { "type": "string", "description": "Ticket ID" },
+          "priority": {
+            "type": "string",
+            "enum": ["Urgente", "Média", "Baixa", "Alta"],
+            "description": "Priority"
+          },
+          "client": { "type": "string", "description": "Client name" },
+          "email": { "type": "string", "format": "email", "description": "Client email" },
+          "subject": { "type": "string", "description": "Ticket subject" },
+          "status": {
+            "type": "string",
+            "enum": ["Aberto", "Em andamento", "Fechado"],
+            "description": "Status"
+          },
+          "responsible": { "type": "string", "description": "Responsible person" }
+        },
+        "required": ["ticketId", "priority", "client", "email", "subject", "status", "responsible"]
+      },
+      "ResponseTicket": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid", "description": "Ticket ID" },
+          "ticketId": { "type": "string", "description": "Ticket ID" },
+          "priority": {
+            "type": "string",
+            "enum": ["Urgente", "Média", "Baixa", "Alta"],
+            "description": "Priority"
+          },
+          "client": { "type": "string", "description": "Client name" },
+          "email": { "type": "string", "format": "email", "description": "Client email" },
+          "subject": { "type": "string", "description": "Ticket subject" },
+          "status": {
+            "type": "string",
+            "enum": ["Aberto", "Em andamento", "Fechado"],
+            "description": "Status"
+          },
+          "responsible": { "type": "string", "description": "Responsible person" },
+          "createdAt": { "type": "string", "format": "date-time", "description": "Created at" },
+          "updatedAt": { "type": "string", "format": "date-time", "description": "Updated at" }
+        },
+        "required": [
+          "id",
+          "ticketId",
+          "priority",
+          "client",
+          "email",
+          "subject",
+          "status",
+          "responsible",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdateTicketRequestBody": {
+        "type": "object",
+        "properties": {
+          "priority": {
+            "type": "string",
+            "enum": ["Urgente", "Média", "Baixa", "Alta"],
+            "description": "Priority"
+          },
+          "client": { "type": "string", "description": "Client name" },
+          "email": { "type": "string", "format": "email", "description": "Client email" },
+          "subject": { "type": "string", "description": "Ticket subject" },
+          "status": {
+            "type": "string",
+            "enum": ["Aberto", "Em andamento", "Fechado"],
+            "description": "Status"
+          },
+          "responsible": { "type": "string", "description": "Responsible person" }
+        }
+      },
+      "ResponseTicketPaginated": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ResponseTicket" }
+          },
+          "total": { "type": "number", "description": "Data total entries" },
+          "listed": { "type": "number", "description": "Data total listed" }
+        },
+        "required": ["data", "total", "listed"]
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "NODE-LEAP API",
+    "url": "https://nortus-challenge.api.stage.loomi.com.br/docs/openapi"
+  }
+}
