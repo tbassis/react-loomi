@@ -2,9 +2,9 @@
 
 import { LineAreaChart } from "@/components/charts/line-area-chart";
 import { BarChart } from "@/components/charts/bar-chart";
-import { OpenLayersMap } from "@/components/map/openlayers-map";
 import { KpiToggleButton } from "@/components/ui/kpi-toggle-button";
 import { useDashboardCharts } from "@/features/dashboard/hooks/use-dashboard-charts";
+import { MapSection } from "@/components/map/map-section";
 
 type KpiKey = "arpu" | "conversion" | "churn" | "retention";
 
@@ -58,7 +58,7 @@ export function DashboardContent({ dashboard }: DashboardContentProps) {
         <div className="w-full bg-on-background p-6 pt-9 rounded-[24px]">
           <h2 className="font-bold text-xl mb-6">Mapa de clientes por região</h2>
           <div className="h-[354px] w-full rounded-[16px] overflow-hidden">
-            <OpenLayersMap />
+            <MapSection />
           </div>
         </div>
       </div>

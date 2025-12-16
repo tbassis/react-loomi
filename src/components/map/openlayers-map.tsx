@@ -9,50 +9,44 @@ import { fromLonLat } from "ol/proj";
 import Point from "ol/geom/Point";
 import Feature from "ol/Feature";
 import VectorSource from "ol/source/Vector";
-import Heatmap from "ol/layer/Heatmap";
+import VectorLayer from "ol/layer/Vector";
+import Icon from "ol/style/Icon";
+import Style from "ol/style/Style";
 
-export function OpenLayersMap() {
+type Location = {
+  id: string;
+  name: string;
+  description: string;
+  coordinates: [number, number];
+  color: string;
+};
+
+type Props = {
+  locations: Location[];
+};
+
+function generatePinSvg(color: string) {
+  const svg = `
+    <svg width="32" height="48" viewBox="0 0 24 36" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M12 0C6.48 0 2 4.48 2 10c0 7.5 10 26 10 26s10-18.5 10-26C22 4.48 17.52 0 12 0z"
+        fill="${color}"
+      />
+      <circle cx="12" cy="10" r="4" fill="white"/>
+    </svg>
+  `;
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+}
+
+export function OpenLayersMap({ locations }: Props) {
   const mapRef = useRef<HTMLDivElement | null>(null);
+  const vectorSourceRef = useRef(new VectorSource());
 
   useEffect(() => {
     if (!mapRef.current) return;
 
-    const clients = [
-      [-34.8711, -8.0631],
-      [-34.8708, -8.0635],
-      [-34.8712, -8.0629],
-      [-34.8721, -8.0641],
-      [-34.8704, -8.0638],
-      [-34.8725, -8.0632],
-      [-34.873, -8.0634],
-      [-34.8736, -8.0636],
-      [-34.8741, -8.0638],
-      [-34.8748, -8.064],
-      [-34.8753, -8.0642],
-      [-34.8759, -8.0644],
-      [-34.8765, -8.0646],
-      [-34.8771, -8.0648],
-      [-34.8738, -8.0628],
-      [-34.8744, -8.0626],
-      [-34.875, -8.0624],
-      [-34.8756, -8.0622],
-    ];
-
-    const features = clients.map(
-      ([lon, lat]) =>
-        new Feature({
-          geometry: new Point(fromLonLat([lon, lat])),
-          weight: 1, // pode variar conforme relevância
-        }),
-    );
-
-    const heatmapLayer = new Heatmap({
-      source: new VectorSource({
-        features,
-      }),
-      blur: 25,
-      radius: 15,
-      opacity: 0.8,
+    const vectorLayer = new VectorLayer({
+      source: vectorSourceRef.current,
     });
 
     const map = new Map({
@@ -61,21 +55,39 @@ export function OpenLayersMap() {
         new TileLayer({
           source: new XYZ({
             url: "https://{a-c}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-            attributions: "© OpenStreetMap © CartoDB",
           }),
         }),
-        heatmapLayer,
+        vectorLayer,
       ],
       view: new View({
-        center: fromLonLat([-34.8711, -8.0631]), // Recife Antigo
-        zoom: 15,
+        center: fromLonLat([-34.8711, -8.0631]), // Recife
+        zoom: 13,
       }),
     });
 
-    return () => {
-      map.setTarget(undefined);
-    };
+    return () => map.setTarget(undefined);
   }, []);
+
+  useEffect(() => {
+    vectorSourceRef.current.clear();
+
+    locations.forEach((location) => {
+      const feature = new Feature({
+        geometry: new Point(fromLonLat(location.coordinates)),
+      });
+
+      feature.setStyle(
+        new Style({
+          image: new Icon({
+            src: generatePinSvg(location.color),
+            anchor: [0.5, 1],
+          }),
+        }),
+      );
+
+      vectorSourceRef.current.addFeature(feature);
+    });
+  }, [locations]);
 
   return <div ref={mapRef} className="h-full w-full rounded" />;
 }
