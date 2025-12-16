@@ -10,6 +10,12 @@ export default defineConfig({
       mode: "split",
       client: "react-query",
       httpClient: "fetch",
+      override: {
+        mutator: {
+          path: "./src/lib/auth-mutator.ts",
+          name: "authMutator",
+        },
+      },
       target: "./src/api/generated.ts",
       schemas: "./src/api/model",
       prettier: true,

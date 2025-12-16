@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { DashboardClient } from "./dashboard-client";
 
 export default async function DashboardPage() {
   const cookieStore = await cookies();
@@ -9,10 +10,5 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  return (
-    <div className="p-6">
-      <h1 className="text-xl font-bold">Dashboard</h1>
-      <p>Usuário autenticado</p>
-    </div>
-  );
+  return <DashboardClient />;
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
@@ -23,7 +24,7 @@ export default function LoginPage() {
   return (
     <section className="flex min-h-screen justify-center items-center p-10 gap-45 bg-background">
       <div className="w-1/2 min-h-full flex flex-col">
-        <img className="mb-40" src="/images/nortus-logo.svg" width={174} height={39} alt="Logo" />
+        <Image className="mb-40" src="/images/nortus-logo.svg" width={174} height={39} alt="Logo" />
         <form onSubmit={handleSubmit(login)} className="w-full space-y-4 rounded">
           <h1 className="text-[36px] ">Login</h1>
           <span className="text-[20px] ">Entre com suas credenciais para acessar sua conta </span>
