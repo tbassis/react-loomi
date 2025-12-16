@@ -1,8 +1,9 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-export default function DashboardPage() {
-  const token = cookies().get("access_token");
+export default async function DashboardPage() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("access_token");
 
   if (!token) {
     redirect("/login");

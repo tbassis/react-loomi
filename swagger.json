@@ -22,6 +22,12 @@
               "application/json": { "schema": { "$ref": "#/components/schemas/ResponseLogin" } }
             }
           },
+          "201": {
+            "description": "Login successfull.",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ResponseLogin" } }
+            }
+          },
           "400": {
             "description": "If any required params are missing or has invalid format or type."
           },

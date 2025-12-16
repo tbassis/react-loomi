@@ -48,6 +48,11 @@ export type loginRestControllerExecuteResponse200 = {
   status: 200;
 };
 
+export type loginRestControllerExecuteResponse201 = {
+  data: ResponseLogin;
+  status: 201;
+};
+
 export type loginRestControllerExecuteResponse400 = {
   data: void;
   status: 400;
@@ -63,7 +68,10 @@ export type loginRestControllerExecuteResponse422 = {
   status: 422;
 };
 
-export type loginRestControllerExecuteResponseSuccess = loginRestControllerExecuteResponse200 & {
+export type loginRestControllerExecuteResponseSuccess = (
+  | loginRestControllerExecuteResponse200
+  | loginRestControllerExecuteResponse201
+) & {
   headers: Headers;
 };
 export type loginRestControllerExecuteResponseError = (
