@@ -1,17 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 
-import { useLoginRestControllerExecute } from "@/api/generated";
-import { authCookie } from "@/lib/auth-cookie";
-import { userStorage } from "@/lib/user-storage";
 import { loginSchema, LoginFormData } from "@/features/auth/login.schema";
+import { useLogin } from "@/features/auth/use-login.hook";
 
 export default function LoginPage() {
-  const router = useRouter();
+  const { login, isLoading } = useLogin();
+
   const [showPassword, setShowPassword] = useState(false);
 
   const {
@@ -22,31 +20,11 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
   });
 
-  const loginMutation = useLoginRestControllerExecute({
-    mutation: {
-      onSuccess: (response, variables) => {
-        if (response.status !== 201) {
-          return;
-        }
-
-        authCookie.set(response.data.access_token);
-        userStorage.save({ email: variables.data.email });
-
-        router.push("/dashboard");
-      },
-      onError: () => {},
-    },
-  });
-
-  function onSubmit(data: LoginFormData) {
-    loginMutation.mutate({ data });
-  }
-
   return (
     <section className="flex min-h-screen justify-center items-center p-10 gap-45 bg-background">
       <div className="w-1/2 min-h-full flex flex-col">
         <img className="mb-40" src="/images/nortus-logo.svg" width={174} height={39} alt="Logo" />
-        <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4 rounded">
+        <form onSubmit={handleSubmit(login)} className="w-full space-y-4 rounded">
           <h1 className="text-[36px] ">Login</h1>
           <span className="text-[20px] ">Entre com suas credenciais para acessar sua conta </span>
 
@@ -93,10 +71,10 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            disabled={loginMutation.isPending}
+            disabled={isLoading}
             className="w-full mt-10 h-15 rounded-lg bg-blue-600 p-2 text-white cursor-pointer"
           >
-            {loginMutation.isPending ? "Entrando..." : "Entrar"}
+            {isLoading ? "Entrando..." : "Entrar"}
           </button>
         </form>
       </div>
