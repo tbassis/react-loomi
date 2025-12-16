@@ -7,21 +7,22 @@ const Chart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
 });
 
-export function BarChart() {
-  const series = [
-    {
-      name: "Conversão",
-      data: [42, 55, 48, 62, 50, 3, 42, 43, 43, 23, 32, 44],
-    },
-  ];
+type Props = {
+  labels: string[];
+  series: {
+    name: string;
+    data: number[];
+  }[];
+};
 
+export function BarChart({ labels, series }: Props) {
   const options: ApexOptions = {
     chart: {
       type: "bar",
       toolbar: { show: false },
     },
     tooltip: {
-      theme: "dark", // ou "dark"
+      theme: "dark",
       x: {
         formatter: (value) => `Mês: ${value}`,
       },
@@ -35,28 +36,15 @@ export function BarChart() {
         columnWidth: "45%",
       },
     },
-    colors: ["#72D9F9"], // verde
+    colors: ["#72D9F9"],
     dataLabels: {
       enabled: false,
     },
     xaxis: {
-      categories: [
-        "Jan",
-        "Fev",
-        "Mar",
-        "Abr",
-        "Mai",
-        "Jun",
-        "Jul",
-        "Ago",
-        "Set",
-        "Out",
-        "Nov",
-        "Dez",
-      ],
+      categories: labels,
       labels: {
         style: {
-          colors: "#9CA3AF", // cinza
+          colors: "#9CA3AF",
           fontSize: "12px",
         },
       },
@@ -67,7 +55,7 @@ export function BarChart() {
           colors: "#9CA3AF",
           fontSize: "12px",
         },
-        formatter: (value) => `${value}`, // pode customizar
+        formatter: (value) => `${value}`,
       },
     },
     grid: {

@@ -39,6 +39,10 @@ import type {
   UpdateUserRequestBody,
 } from "./model";
 
+import { authMutator } from "../lib/auth-mutator";
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
 /**
  * Endpoint to user login using email and password.
  * @summary User login.
@@ -94,17 +98,12 @@ export const loginRestControllerExecute = async (
   requestLoginRequestBody: RequestLoginRequestBody,
   options?: RequestInit,
 ): Promise<loginRestControllerExecuteResponse> => {
-  const res = await fetch(getLoginRestControllerExecuteUrl(), {
+  return authMutator<loginRestControllerExecuteResponse>(getLoginRestControllerExecuteUrl(), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/json", ...options?.headers },
     body: JSON.stringify(requestLoginRequestBody),
   });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: loginRestControllerExecuteResponse["data"] = body ? JSON.parse(body) : {};
-  return { data, status: res.status, headers: res.headers } as loginRestControllerExecuteResponse;
 };
 
 export const getLoginRestControllerExecuteMutationOptions = <
@@ -117,7 +116,7 @@ export const getLoginRestControllerExecuteMutationOptions = <
     { data: RequestLoginRequestBody },
     TContext
   >;
-  fetch?: RequestInit;
+  request?: SecondParameter<typeof authMutator>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof loginRestControllerExecute>>,
   TError,
@@ -125,11 +124,11 @@ export const getLoginRestControllerExecuteMutationOptions = <
   TContext
 > => {
   const mutationKey = ["loginRestControllerExecute"];
-  const { mutation: mutationOptions, fetch: fetchOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, fetch: undefined };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof loginRestControllerExecute>>,
@@ -137,7 +136,7 @@ export const getLoginRestControllerExecuteMutationOptions = <
   > = (props) => {
     const { data } = props ?? {};
 
-    return loginRestControllerExecute(data, fetchOptions);
+    return loginRestControllerExecute(data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -160,7 +159,7 @@ export const useLoginRestControllerExecute = <TError = void, TContext = unknown>
       { data: RequestLoginRequestBody },
       TContext
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -222,21 +221,15 @@ export const refreshTokenRestControllerExecute = async (
   refreshTokenRestRequestBody: RefreshTokenRestRequestBody,
   options?: RequestInit,
 ): Promise<refreshTokenRestControllerExecuteResponse> => {
-  const res = await fetch(getRefreshTokenRestControllerExecuteUrl(), {
-    ...options,
-    method: "POST",
-    headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(refreshTokenRestRequestBody),
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: refreshTokenRestControllerExecuteResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as refreshTokenRestControllerExecuteResponse;
+  return authMutator<refreshTokenRestControllerExecuteResponse>(
+    getRefreshTokenRestControllerExecuteUrl(),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(refreshTokenRestRequestBody),
+    },
+  );
 };
 
 export const getRefreshTokenRestControllerExecuteMutationOptions = <
@@ -249,7 +242,7 @@ export const getRefreshTokenRestControllerExecuteMutationOptions = <
     { data: RefreshTokenRestRequestBody },
     TContext
   >;
-  fetch?: RequestInit;
+  request?: SecondParameter<typeof authMutator>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof refreshTokenRestControllerExecute>>,
   TError,
@@ -257,11 +250,11 @@ export const getRefreshTokenRestControllerExecuteMutationOptions = <
   TContext
 > => {
   const mutationKey = ["refreshTokenRestControllerExecute"];
-  const { mutation: mutationOptions, fetch: fetchOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, fetch: undefined };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof refreshTokenRestControllerExecute>>,
@@ -269,7 +262,7 @@ export const getRefreshTokenRestControllerExecuteMutationOptions = <
   > = (props) => {
     const { data } = props ?? {};
 
-    return refreshTokenRestControllerExecute(data, fetchOptions);
+    return refreshTokenRestControllerExecute(data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -292,7 +285,7 @@ export const useRefreshTokenRestControllerExecute = <TError = void, TContext = u
       { data: RefreshTokenRestRequestBody },
       TContext
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -354,23 +347,15 @@ export const createForgotPasswordRestControllerExecute = async (
   createUserForgotPasswordRequestBody: CreateUserForgotPasswordRequestBody,
   options?: RequestInit,
 ): Promise<createForgotPasswordRestControllerExecuteResponse> => {
-  const res = await fetch(getCreateForgotPasswordRestControllerExecuteUrl(), {
-    ...options,
-    method: "POST",
-    headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(createUserForgotPasswordRequestBody),
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: createForgotPasswordRestControllerExecuteResponse["data"] = body
-    ? JSON.parse(body)
-    : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as createForgotPasswordRestControllerExecuteResponse;
+  return authMutator<createForgotPasswordRestControllerExecuteResponse>(
+    getCreateForgotPasswordRestControllerExecuteUrl(),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(createUserForgotPasswordRequestBody),
+    },
+  );
 };
 
 export const getCreateForgotPasswordRestControllerExecuteMutationOptions = <
@@ -383,7 +368,7 @@ export const getCreateForgotPasswordRestControllerExecuteMutationOptions = <
     { data: CreateUserForgotPasswordRequestBody },
     TContext
   >;
-  fetch?: RequestInit;
+  request?: SecondParameter<typeof authMutator>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof createForgotPasswordRestControllerExecute>>,
   TError,
@@ -391,11 +376,11 @@ export const getCreateForgotPasswordRestControllerExecuteMutationOptions = <
   TContext
 > => {
   const mutationKey = ["createForgotPasswordRestControllerExecute"];
-  const { mutation: mutationOptions, fetch: fetchOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, fetch: undefined };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof createForgotPasswordRestControllerExecute>>,
@@ -403,7 +388,7 @@ export const getCreateForgotPasswordRestControllerExecuteMutationOptions = <
   > = (props) => {
     const { data } = props ?? {};
 
-    return createForgotPasswordRestControllerExecute(data, fetchOptions);
+    return createForgotPasswordRestControllerExecute(data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -427,7 +412,7 @@ export const useCreateForgotPasswordRestControllerExecute = <TError = void, TCon
       { data: CreateUserForgotPasswordRequestBody },
       TContext
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -490,23 +475,15 @@ export const updateForgotPasswordRestControllerExecute = async (
   updateUserForgotPasswordRequestBody: UpdateUserForgotPasswordRequestBody,
   options?: RequestInit,
 ): Promise<updateForgotPasswordRestControllerExecuteResponse> => {
-  const res = await fetch(getUpdateForgotPasswordRestControllerExecuteUrl(id), {
-    ...options,
-    method: "PATCH",
-    headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(updateUserForgotPasswordRequestBody),
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: updateForgotPasswordRestControllerExecuteResponse["data"] = body
-    ? JSON.parse(body)
-    : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as updateForgotPasswordRestControllerExecuteResponse;
+  return authMutator<updateForgotPasswordRestControllerExecuteResponse>(
+    getUpdateForgotPasswordRestControllerExecuteUrl(id),
+    {
+      ...options,
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(updateUserForgotPasswordRequestBody),
+    },
+  );
 };
 
 export const getUpdateForgotPasswordRestControllerExecuteMutationOptions = <
@@ -519,7 +496,7 @@ export const getUpdateForgotPasswordRestControllerExecuteMutationOptions = <
     { id: unknown; data: UpdateUserForgotPasswordRequestBody },
     TContext
   >;
-  fetch?: RequestInit;
+  request?: SecondParameter<typeof authMutator>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof updateForgotPasswordRestControllerExecute>>,
   TError,
@@ -527,11 +504,11 @@ export const getUpdateForgotPasswordRestControllerExecuteMutationOptions = <
   TContext
 > => {
   const mutationKey = ["updateForgotPasswordRestControllerExecute"];
-  const { mutation: mutationOptions, fetch: fetchOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, fetch: undefined };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof updateForgotPasswordRestControllerExecute>>,
@@ -539,7 +516,7 @@ export const getUpdateForgotPasswordRestControllerExecuteMutationOptions = <
   > = (props) => {
     const { id, data } = props ?? {};
 
-    return updateForgotPasswordRestControllerExecute(id, data, fetchOptions);
+    return updateForgotPasswordRestControllerExecute(id, data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -563,7 +540,7 @@ export const useUpdateForgotPasswordRestControllerExecute = <TError = void, TCon
       { id: unknown; data: UpdateUserForgotPasswordRequestBody },
       TContext
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -617,17 +594,12 @@ export const createUserControllerExecute = async (
   createUserRequestBody: CreateUserRequestBody,
   options?: RequestInit,
 ): Promise<createUserControllerExecuteResponse> => {
-  const res = await fetch(getCreateUserControllerExecuteUrl(), {
+  return authMutator<createUserControllerExecuteResponse>(getCreateUserControllerExecuteUrl(), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/json", ...options?.headers },
     body: JSON.stringify(createUserRequestBody),
   });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: createUserControllerExecuteResponse["data"] = body ? JSON.parse(body) : {};
-  return { data, status: res.status, headers: res.headers } as createUserControllerExecuteResponse;
 };
 
 export const getCreateUserControllerExecuteMutationOptions = <
@@ -640,7 +612,7 @@ export const getCreateUserControllerExecuteMutationOptions = <
     { data: CreateUserRequestBody },
     TContext
   >;
-  fetch?: RequestInit;
+  request?: SecondParameter<typeof authMutator>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof createUserControllerExecute>>,
   TError,
@@ -648,11 +620,11 @@ export const getCreateUserControllerExecuteMutationOptions = <
   TContext
 > => {
   const mutationKey = ["createUserControllerExecute"];
-  const { mutation: mutationOptions, fetch: fetchOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, fetch: undefined };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof createUserControllerExecute>>,
@@ -660,7 +632,7 @@ export const getCreateUserControllerExecuteMutationOptions = <
   > = (props) => {
     const { data } = props ?? {};
 
-    return createUserControllerExecute(data, fetchOptions);
+    return createUserControllerExecute(data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -683,7 +655,7 @@ export const useCreateUserControllerExecute = <TError = ApiError, TContext = unk
       { data: CreateUserRequestBody },
       TContext
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -730,15 +702,10 @@ export const deleteUserControllerExecute = async (
   id: unknown,
   options?: RequestInit,
 ): Promise<deleteUserControllerExecuteResponse> => {
-  const res = await fetch(getDeleteUserControllerExecuteUrl(id), {
+  return authMutator<deleteUserControllerExecuteResponse>(getDeleteUserControllerExecuteUrl(id), {
     ...options,
     method: "DELETE",
   });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: deleteUserControllerExecuteResponse["data"] = body ? JSON.parse(body) : {};
-  return { data, status: res.status, headers: res.headers } as deleteUserControllerExecuteResponse;
 };
 
 export const getDeleteUserControllerExecuteMutationOptions = <
@@ -751,7 +718,7 @@ export const getDeleteUserControllerExecuteMutationOptions = <
     { id: unknown },
     TContext
   >;
-  fetch?: RequestInit;
+  request?: SecondParameter<typeof authMutator>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof deleteUserControllerExecute>>,
   TError,
@@ -759,11 +726,11 @@ export const getDeleteUserControllerExecuteMutationOptions = <
   TContext
 > => {
   const mutationKey = ["deleteUserControllerExecute"];
-  const { mutation: mutationOptions, fetch: fetchOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, fetch: undefined };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof deleteUserControllerExecute>>,
@@ -771,7 +738,7 @@ export const getDeleteUserControllerExecuteMutationOptions = <
   > = (props) => {
     const { id } = props ?? {};
 
-    return deleteUserControllerExecute(id, fetchOptions);
+    return deleteUserControllerExecute(id, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -794,7 +761,7 @@ export const useDeleteUserControllerExecute = <TError = ApiError, TContext = unk
       { id: unknown },
       TContext
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -857,15 +824,10 @@ export const getUserByIdControllerExecute = async (
   id: unknown,
   options?: RequestInit,
 ): Promise<getUserByIdControllerExecuteResponse> => {
-  const res = await fetch(getGetUserByIdControllerExecuteUrl(id), {
+  return authMutator<getUserByIdControllerExecuteResponse>(getGetUserByIdControllerExecuteUrl(id), {
     ...options,
     method: "GET",
   });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getUserByIdControllerExecuteResponse["data"] = body ? JSON.parse(body) : {};
-  return { data, status: res.status, headers: res.headers } as getUserByIdControllerExecuteResponse;
 };
 
 export const getGetUserByIdControllerExecuteQueryKey = (id?: unknown) => {
@@ -881,16 +843,16 @@ export const getGetUserByIdControllerExecuteQueryOptions = <
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getUserByIdControllerExecute>>, TError, TData>
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
 ) => {
-  const { query: queryOptions, fetch: fetchOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetUserByIdControllerExecuteQueryKey(id);
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserByIdControllerExecute>>> = ({
     signal,
-  }) => getUserByIdControllerExecute(id, { signal, ...fetchOptions });
+  }) => getUserByIdControllerExecute(id, { signal, ...requestOptions });
 
   return { queryKey, queryFn, enabled: !!id, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof getUserByIdControllerExecute>>,
@@ -921,7 +883,7 @@ export function useGetUserByIdControllerExecute<
         >,
         "initialData"
       >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -942,7 +904,7 @@ export function useGetUserByIdControllerExecute<
         >,
         "initialData"
       >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -955,7 +917,7 @@ export function useGetUserByIdControllerExecute<
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getUserByIdControllerExecute>>, TError, TData>
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -972,7 +934,7 @@ export function useGetUserByIdControllerExecute<
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getUserByIdControllerExecute>>, TError, TData>
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
@@ -1043,21 +1005,15 @@ export const updateUserByIdControllerExecute = async (
   updateUserRequestBody: UpdateUserRequestBody,
   options?: RequestInit,
 ): Promise<updateUserByIdControllerExecuteResponse> => {
-  const res = await fetch(getUpdateUserByIdControllerExecuteUrl(id), {
-    ...options,
-    method: "PATCH",
-    headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(updateUserRequestBody),
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: updateUserByIdControllerExecuteResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as updateUserByIdControllerExecuteResponse;
+  return authMutator<updateUserByIdControllerExecuteResponse>(
+    getUpdateUserByIdControllerExecuteUrl(id),
+    {
+      ...options,
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(updateUserRequestBody),
+    },
+  );
 };
 
 export const getUpdateUserByIdControllerExecuteMutationOptions = <
@@ -1070,7 +1026,7 @@ export const getUpdateUserByIdControllerExecuteMutationOptions = <
     { id: unknown; data: UpdateUserRequestBody },
     TContext
   >;
-  fetch?: RequestInit;
+  request?: SecondParameter<typeof authMutator>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof updateUserByIdControllerExecute>>,
   TError,
@@ -1078,11 +1034,11 @@ export const getUpdateUserByIdControllerExecuteMutationOptions = <
   TContext
 > => {
   const mutationKey = ["updateUserByIdControllerExecute"];
-  const { mutation: mutationOptions, fetch: fetchOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, fetch: undefined };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof updateUserByIdControllerExecute>>,
@@ -1090,7 +1046,7 @@ export const getUpdateUserByIdControllerExecuteMutationOptions = <
   > = (props) => {
     const { id, data } = props ?? {};
 
-    return updateUserByIdControllerExecute(id, data, fetchOptions);
+    return updateUserByIdControllerExecute(id, data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -1113,7 +1069,7 @@ export const useUpdateUserByIdControllerExecute = <TError = ApiError | void, TCo
       { id: unknown; data: UpdateUserRequestBody },
       TContext
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -1176,19 +1132,13 @@ export const getUserByEmailControllerExecute = async (
   email: unknown,
   options?: RequestInit,
 ): Promise<getUserByEmailControllerExecuteResponse> => {
-  const res = await fetch(getGetUserByEmailControllerExecuteUrl(email), {
-    ...options,
-    method: "GET",
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getUserByEmailControllerExecuteResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as getUserByEmailControllerExecuteResponse;
+  return authMutator<getUserByEmailControllerExecuteResponse>(
+    getGetUserByEmailControllerExecuteUrl(email),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
 };
 
 export const getGetUserByEmailControllerExecuteQueryKey = (email?: unknown) => {
@@ -1204,16 +1154,16 @@ export const getGetUserByEmailControllerExecuteQueryOptions = <
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getUserByEmailControllerExecute>>, TError, TData>
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
 ) => {
-  const { query: queryOptions, fetch: fetchOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetUserByEmailControllerExecuteQueryKey(email);
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserByEmailControllerExecute>>> = ({
     signal,
-  }) => getUserByEmailControllerExecute(email, { signal, ...fetchOptions });
+  }) => getUserByEmailControllerExecute(email, { signal, ...requestOptions });
 
   return { queryKey, queryFn, enabled: !!email, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof getUserByEmailControllerExecute>>,
@@ -1244,7 +1194,7 @@ export function useGetUserByEmailControllerExecute<
         >,
         "initialData"
       >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -1265,7 +1215,7 @@ export function useGetUserByEmailControllerExecute<
         >,
         "initialData"
       >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -1278,7 +1228,7 @@ export function useGetUserByEmailControllerExecute<
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getUserByEmailControllerExecute>>, TError, TData>
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -1295,7 +1245,7 @@ export function useGetUserByEmailControllerExecute<
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getUserByEmailControllerExecute>>, TError, TData>
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
@@ -1345,19 +1295,13 @@ export const hardDeleteUserControllerExecute = async (
   id: unknown,
   options?: RequestInit,
 ): Promise<hardDeleteUserControllerExecuteResponse> => {
-  const res = await fetch(getHardDeleteUserControllerExecuteUrl(id), {
-    ...options,
-    method: "DELETE",
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: hardDeleteUserControllerExecuteResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as hardDeleteUserControllerExecuteResponse;
+  return authMutator<hardDeleteUserControllerExecuteResponse>(
+    getHardDeleteUserControllerExecuteUrl(id),
+    {
+      ...options,
+      method: "DELETE",
+    },
+  );
 };
 
 export const getHardDeleteUserControllerExecuteMutationOptions = <
@@ -1370,7 +1314,7 @@ export const getHardDeleteUserControllerExecuteMutationOptions = <
     { id: unknown },
     TContext
   >;
-  fetch?: RequestInit;
+  request?: SecondParameter<typeof authMutator>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof hardDeleteUserControllerExecute>>,
   TError,
@@ -1378,11 +1322,11 @@ export const getHardDeleteUserControllerExecuteMutationOptions = <
   TContext
 > => {
   const mutationKey = ["hardDeleteUserControllerExecute"];
-  const { mutation: mutationOptions, fetch: fetchOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, fetch: undefined };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof hardDeleteUserControllerExecute>>,
@@ -1390,7 +1334,7 @@ export const getHardDeleteUserControllerExecuteMutationOptions = <
   > = (props) => {
     const { id } = props ?? {};
 
-    return hardDeleteUserControllerExecute(id, fetchOptions);
+    return hardDeleteUserControllerExecute(id, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -1413,7 +1357,7 @@ export const useHardDeleteUserControllerExecute = <TError = ApiError, TContext =
       { id: unknown },
       TContext
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -1459,15 +1403,10 @@ export const getGetChatControllerExecuteUrl = () => {
 export const getChatControllerExecute = async (
   options?: RequestInit,
 ): Promise<getChatControllerExecuteResponse> => {
-  const res = await fetch(getGetChatControllerExecuteUrl(), {
+  return authMutator<getChatControllerExecuteResponse>(getGetChatControllerExecuteUrl(), {
     ...options,
     method: "GET",
   });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getChatControllerExecuteResponse["data"] = body ? JSON.parse(body) : {};
-  return { data, status: res.status, headers: res.headers } as getChatControllerExecuteResponse;
 };
 
 export const getGetChatControllerExecuteQueryKey = () => {
@@ -1481,15 +1420,15 @@ export const getGetChatControllerExecuteQueryOptions = <
   query?: Partial<
     UseQueryOptions<Awaited<ReturnType<typeof getChatControllerExecute>>, TError, TData>
   >;
-  fetch?: RequestInit;
+  request?: SecondParameter<typeof authMutator>;
 }) => {
-  const { query: queryOptions, fetch: fetchOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetChatControllerExecuteQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getChatControllerExecute>>> = ({
     signal,
-  }) => getChatControllerExecute({ signal, ...fetchOptions });
+  }) => getChatControllerExecute({ signal, ...requestOptions });
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof getChatControllerExecute>>,
@@ -1519,7 +1458,7 @@ export function useGetChatControllerExecute<
         >,
         "initialData"
       >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -1539,7 +1478,7 @@ export function useGetChatControllerExecute<
         >,
         "initialData"
       >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -1551,7 +1490,7 @@ export function useGetChatControllerExecute<
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getChatControllerExecute>>, TError, TData>
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -1567,7 +1506,7 @@ export function useGetChatControllerExecute<
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getChatControllerExecute>>, TError, TData>
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
@@ -1616,19 +1555,10 @@ export const getGetDashboardControllerExecuteUrl = () => {
 export const getDashboardControllerExecute = async (
   options?: RequestInit,
 ): Promise<getDashboardControllerExecuteResponse> => {
-  const res = await fetch(getGetDashboardControllerExecuteUrl(), {
+  return authMutator<getDashboardControllerExecuteResponse>(getGetDashboardControllerExecuteUrl(), {
     ...options,
     method: "GET",
   });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getDashboardControllerExecuteResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as getDashboardControllerExecuteResponse;
 };
 
 export const getGetDashboardControllerExecuteQueryKey = () => {
@@ -1642,15 +1572,15 @@ export const getGetDashboardControllerExecuteQueryOptions = <
   query?: Partial<
     UseQueryOptions<Awaited<ReturnType<typeof getDashboardControllerExecute>>, TError, TData>
   >;
-  fetch?: RequestInit;
+  request?: SecondParameter<typeof authMutator>;
 }) => {
-  const { query: queryOptions, fetch: fetchOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetDashboardControllerExecuteQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getDashboardControllerExecute>>> = ({
     signal,
-  }) => getDashboardControllerExecute({ signal, ...fetchOptions });
+  }) => getDashboardControllerExecute({ signal, ...requestOptions });
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof getDashboardControllerExecute>>,
@@ -1680,7 +1610,7 @@ export function useGetDashboardControllerExecute<
         >,
         "initialData"
       >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -1700,7 +1630,7 @@ export function useGetDashboardControllerExecute<
         >,
         "initialData"
       >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -1712,7 +1642,7 @@ export function useGetDashboardControllerExecute<
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getDashboardControllerExecute>>, TError, TData>
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -1728,7 +1658,7 @@ export function useGetDashboardControllerExecute<
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getDashboardControllerExecute>>, TError, TData>
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
@@ -1777,19 +1707,13 @@ export const getGetSimuladorPlanosControllerExecuteUrl = () => {
 export const getSimuladorPlanosControllerExecute = async (
   options?: RequestInit,
 ): Promise<getSimuladorPlanosControllerExecuteResponse> => {
-  const res = await fetch(getGetSimuladorPlanosControllerExecuteUrl(), {
-    ...options,
-    method: "GET",
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getSimuladorPlanosControllerExecuteResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as getSimuladorPlanosControllerExecuteResponse;
+  return authMutator<getSimuladorPlanosControllerExecuteResponse>(
+    getGetSimuladorPlanosControllerExecuteUrl(),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
 };
 
 export const getGetSimuladorPlanosControllerExecuteQueryKey = () => {
@@ -1803,15 +1727,15 @@ export const getGetSimuladorPlanosControllerExecuteQueryOptions = <
   query?: Partial<
     UseQueryOptions<Awaited<ReturnType<typeof getSimuladorPlanosControllerExecute>>, TError, TData>
   >;
-  fetch?: RequestInit;
+  request?: SecondParameter<typeof authMutator>;
 }) => {
-  const { query: queryOptions, fetch: fetchOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetSimuladorPlanosControllerExecuteQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getSimuladorPlanosControllerExecute>>> = ({
     signal,
-  }) => getSimuladorPlanosControllerExecute({ signal, ...fetchOptions });
+  }) => getSimuladorPlanosControllerExecute({ signal, ...requestOptions });
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof getSimuladorPlanosControllerExecute>>,
@@ -1845,7 +1769,7 @@ export function useGetSimuladorPlanosControllerExecute<
         >,
         "initialData"
       >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -1869,7 +1793,7 @@ export function useGetSimuladorPlanosControllerExecute<
         >,
         "initialData"
       >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -1885,7 +1809,7 @@ export function useGetSimuladorPlanosControllerExecute<
         TData
       >
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -1905,7 +1829,7 @@ export function useGetSimuladorPlanosControllerExecute<
         TData
       >
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
@@ -1961,21 +1885,12 @@ export const createTicketControllerExecute = async (
   createTicketRequestBody: CreateTicketRequestBody,
   options?: RequestInit,
 ): Promise<createTicketControllerExecuteResponse> => {
-  const res = await fetch(getCreateTicketControllerExecuteUrl(), {
+  return authMutator<createTicketControllerExecuteResponse>(getCreateTicketControllerExecuteUrl(), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/json", ...options?.headers },
     body: JSON.stringify(createTicketRequestBody),
   });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: createTicketControllerExecuteResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as createTicketControllerExecuteResponse;
 };
 
 export const getCreateTicketControllerExecuteMutationOptions = <
@@ -1988,7 +1903,7 @@ export const getCreateTicketControllerExecuteMutationOptions = <
     { data: CreateTicketRequestBody },
     TContext
   >;
-  fetch?: RequestInit;
+  request?: SecondParameter<typeof authMutator>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof createTicketControllerExecute>>,
   TError,
@@ -1996,11 +1911,11 @@ export const getCreateTicketControllerExecuteMutationOptions = <
   TContext
 > => {
   const mutationKey = ["createTicketControllerExecute"];
-  const { mutation: mutationOptions, fetch: fetchOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, fetch: undefined };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof createTicketControllerExecute>>,
@@ -2008,7 +1923,7 @@ export const getCreateTicketControllerExecuteMutationOptions = <
   > = (props) => {
     const { data } = props ?? {};
 
-    return createTicketControllerExecute(data, fetchOptions);
+    return createTicketControllerExecute(data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -2031,7 +1946,7 @@ export const useCreateTicketControllerExecute = <TError = ApiError, TContext = u
       { data: CreateTicketRequestBody },
       TContext
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -2079,19 +1994,13 @@ export const getListTicketsByFilterControllerExecuteUrl = () => {
 export const listTicketsByFilterControllerExecute = async (
   options?: RequestInit,
 ): Promise<listTicketsByFilterControllerExecuteResponse> => {
-  const res = await fetch(getListTicketsByFilterControllerExecuteUrl(), {
-    ...options,
-    method: "GET",
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: listTicketsByFilterControllerExecuteResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as listTicketsByFilterControllerExecuteResponse;
+  return authMutator<listTicketsByFilterControllerExecuteResponse>(
+    getListTicketsByFilterControllerExecuteUrl(),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
 };
 
 export const getListTicketsByFilterControllerExecuteQueryKey = () => {
@@ -2105,15 +2014,15 @@ export const getListTicketsByFilterControllerExecuteQueryOptions = <
   query?: Partial<
     UseQueryOptions<Awaited<ReturnType<typeof listTicketsByFilterControllerExecute>>, TError, TData>
   >;
-  fetch?: RequestInit;
+  request?: SecondParameter<typeof authMutator>;
 }) => {
-  const { query: queryOptions, fetch: fetchOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getListTicketsByFilterControllerExecuteQueryKey();
 
   const queryFn: QueryFunction<
     Awaited<ReturnType<typeof listTicketsByFilterControllerExecute>>
-  > = ({ signal }) => listTicketsByFilterControllerExecute({ signal, ...fetchOptions });
+  > = ({ signal }) => listTicketsByFilterControllerExecute({ signal, ...requestOptions });
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof listTicketsByFilterControllerExecute>>,
@@ -2147,7 +2056,7 @@ export function useListTicketsByFilterControllerExecute<
         >,
         "initialData"
       >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -2171,7 +2080,7 @@ export function useListTicketsByFilterControllerExecute<
         >,
         "initialData"
       >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -2187,7 +2096,7 @@ export function useListTicketsByFilterControllerExecute<
         TData
       >
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -2207,7 +2116,7 @@ export function useListTicketsByFilterControllerExecute<
         TData
       >
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
@@ -2271,19 +2180,13 @@ export const getTicketByIdControllerExecute = async (
   id: unknown,
   options?: RequestInit,
 ): Promise<getTicketByIdControllerExecuteResponse> => {
-  const res = await fetch(getGetTicketByIdControllerExecuteUrl(id), {
-    ...options,
-    method: "GET",
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getTicketByIdControllerExecuteResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as getTicketByIdControllerExecuteResponse;
+  return authMutator<getTicketByIdControllerExecuteResponse>(
+    getGetTicketByIdControllerExecuteUrl(id),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
 };
 
 export const getGetTicketByIdControllerExecuteQueryKey = (id?: unknown) => {
@@ -2299,16 +2202,16 @@ export const getGetTicketByIdControllerExecuteQueryOptions = <
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getTicketByIdControllerExecute>>, TError, TData>
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
 ) => {
-  const { query: queryOptions, fetch: fetchOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetTicketByIdControllerExecuteQueryKey(id);
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getTicketByIdControllerExecute>>> = ({
     signal,
-  }) => getTicketByIdControllerExecute(id, { signal, ...fetchOptions });
+  }) => getTicketByIdControllerExecute(id, { signal, ...requestOptions });
 
   return { queryKey, queryFn, enabled: !!id, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof getTicketByIdControllerExecute>>,
@@ -2339,7 +2242,7 @@ export function useGetTicketByIdControllerExecute<
         >,
         "initialData"
       >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -2360,7 +2263,7 @@ export function useGetTicketByIdControllerExecute<
         >,
         "initialData"
       >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -2373,7 +2276,7 @@ export function useGetTicketByIdControllerExecute<
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getTicketByIdControllerExecute>>, TError, TData>
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -2390,7 +2293,7 @@ export function useGetTicketByIdControllerExecute<
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getTicketByIdControllerExecute>>, TError, TData>
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
@@ -2461,21 +2364,15 @@ export const updateTicketControllerExecute = async (
   updateTicketRequestBody: UpdateTicketRequestBody,
   options?: RequestInit,
 ): Promise<updateTicketControllerExecuteResponse> => {
-  const res = await fetch(getUpdateTicketControllerExecuteUrl(id), {
-    ...options,
-    method: "PATCH",
-    headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(updateTicketRequestBody),
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: updateTicketControllerExecuteResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as updateTicketControllerExecuteResponse;
+  return authMutator<updateTicketControllerExecuteResponse>(
+    getUpdateTicketControllerExecuteUrl(id),
+    {
+      ...options,
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(updateTicketRequestBody),
+    },
+  );
 };
 
 export const getUpdateTicketControllerExecuteMutationOptions = <
@@ -2488,7 +2385,7 @@ export const getUpdateTicketControllerExecuteMutationOptions = <
     { id: unknown; data: UpdateTicketRequestBody },
     TContext
   >;
-  fetch?: RequestInit;
+  request?: SecondParameter<typeof authMutator>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof updateTicketControllerExecute>>,
   TError,
@@ -2496,11 +2393,11 @@ export const getUpdateTicketControllerExecuteMutationOptions = <
   TContext
 > => {
   const mutationKey = ["updateTicketControllerExecute"];
-  const { mutation: mutationOptions, fetch: fetchOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, fetch: undefined };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof updateTicketControllerExecute>>,
@@ -2508,7 +2405,7 @@ export const getUpdateTicketControllerExecuteMutationOptions = <
   > = (props) => {
     const { id, data } = props ?? {};
 
-    return updateTicketControllerExecute(id, data, fetchOptions);
+    return updateTicketControllerExecute(id, data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -2531,7 +2428,7 @@ export const useUpdateTicketControllerExecute = <TError = ApiError | void, TCont
       { id: unknown; data: UpdateTicketRequestBody },
       TContext
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -2580,19 +2477,13 @@ export const deleteTicketControllerExecute = async (
   id: unknown,
   options?: RequestInit,
 ): Promise<deleteTicketControllerExecuteResponse> => {
-  const res = await fetch(getDeleteTicketControllerExecuteUrl(id), {
-    ...options,
-    method: "DELETE",
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: deleteTicketControllerExecuteResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as deleteTicketControllerExecuteResponse;
+  return authMutator<deleteTicketControllerExecuteResponse>(
+    getDeleteTicketControllerExecuteUrl(id),
+    {
+      ...options,
+      method: "DELETE",
+    },
+  );
 };
 
 export const getDeleteTicketControllerExecuteMutationOptions = <
@@ -2605,7 +2496,7 @@ export const getDeleteTicketControllerExecuteMutationOptions = <
     { id: unknown },
     TContext
   >;
-  fetch?: RequestInit;
+  request?: SecondParameter<typeof authMutator>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof deleteTicketControllerExecute>>,
   TError,
@@ -2613,11 +2504,11 @@ export const getDeleteTicketControllerExecuteMutationOptions = <
   TContext
 > => {
   const mutationKey = ["deleteTicketControllerExecute"];
-  const { mutation: mutationOptions, fetch: fetchOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, fetch: undefined };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof deleteTicketControllerExecute>>,
@@ -2625,7 +2516,7 @@ export const getDeleteTicketControllerExecuteMutationOptions = <
   > = (props) => {
     const { id } = props ?? {};
 
-    return deleteTicketControllerExecute(id, fetchOptions);
+    return deleteTicketControllerExecute(id, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -2648,7 +2539,7 @@ export const useDeleteTicketControllerExecute = <TError = ApiError, TContext = u
       { id: unknown },
       TContext
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -2695,15 +2586,10 @@ export const getSeedTicketsControllerExecuteUrl = () => {
 export const seedTicketsControllerExecute = async (
   options?: RequestInit,
 ): Promise<seedTicketsControllerExecuteResponse> => {
-  const res = await fetch(getSeedTicketsControllerExecuteUrl(), {
+  return authMutator<seedTicketsControllerExecuteResponse>(getSeedTicketsControllerExecuteUrl(), {
     ...options,
     method: "POST",
   });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: seedTicketsControllerExecuteResponse["data"] = body ? JSON.parse(body) : {};
-  return { data, status: res.status, headers: res.headers } as seedTicketsControllerExecuteResponse;
 };
 
 export const getSeedTicketsControllerExecuteMutationOptions = <
@@ -2716,7 +2602,7 @@ export const getSeedTicketsControllerExecuteMutationOptions = <
     void,
     TContext
   >;
-  fetch?: RequestInit;
+  request?: SecondParameter<typeof authMutator>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof seedTicketsControllerExecute>>,
   TError,
@@ -2724,17 +2610,17 @@ export const getSeedTicketsControllerExecuteMutationOptions = <
   TContext
 > => {
   const mutationKey = ["seedTicketsControllerExecute"];
-  const { mutation: mutationOptions, fetch: fetchOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, fetch: undefined };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof seedTicketsControllerExecute>>,
     void
   > = () => {
-    return seedTicketsControllerExecute(fetchOptions);
+    return seedTicketsControllerExecute(requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -2757,7 +2643,7 @@ export const useSeedTicketsControllerExecute = <TError = ApiError, TContext = un
       void,
       TContext
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -2803,15 +2689,10 @@ export const getGetMapaControllerExecuteUrl = () => {
 export const getMapaControllerExecute = async (
   options?: RequestInit,
 ): Promise<getMapaControllerExecuteResponse> => {
-  const res = await fetch(getGetMapaControllerExecuteUrl(), {
+  return authMutator<getMapaControllerExecuteResponse>(getGetMapaControllerExecuteUrl(), {
     ...options,
     method: "GET",
   });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getMapaControllerExecuteResponse["data"] = body ? JSON.parse(body) : {};
-  return { data, status: res.status, headers: res.headers } as getMapaControllerExecuteResponse;
 };
 
 export const getGetMapaControllerExecuteQueryKey = () => {
@@ -2825,15 +2706,15 @@ export const getGetMapaControllerExecuteQueryOptions = <
   query?: Partial<
     UseQueryOptions<Awaited<ReturnType<typeof getMapaControllerExecute>>, TError, TData>
   >;
-  fetch?: RequestInit;
+  request?: SecondParameter<typeof authMutator>;
 }) => {
-  const { query: queryOptions, fetch: fetchOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetMapaControllerExecuteQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getMapaControllerExecute>>> = ({
     signal,
-  }) => getMapaControllerExecute({ signal, ...fetchOptions });
+  }) => getMapaControllerExecute({ signal, ...requestOptions });
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof getMapaControllerExecute>>,
@@ -2863,7 +2744,7 @@ export function useGetMapaControllerExecute<
         >,
         "initialData"
       >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -2883,7 +2764,7 @@ export function useGetMapaControllerExecute<
         >,
         "initialData"
       >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -2895,7 +2776,7 @@ export function useGetMapaControllerExecute<
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getMapaControllerExecute>>, TError, TData>
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -2911,7 +2792,7 @@ export function useGetMapaControllerExecute<
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getMapaControllerExecute>>, TError, TData>
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
@@ -2944,19 +2825,13 @@ export const getPrometheusControllerGetMetricsUrl = () => {
 export const prometheusControllerGetMetrics = async (
   options?: RequestInit,
 ): Promise<prometheusControllerGetMetricsResponse> => {
-  const res = await fetch(getPrometheusControllerGetMetricsUrl(), {
-    ...options,
-    method: "GET",
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: prometheusControllerGetMetricsResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as prometheusControllerGetMetricsResponse;
+  return authMutator<prometheusControllerGetMetricsResponse>(
+    getPrometheusControllerGetMetricsUrl(),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
 };
 
 export const getPrometheusControllerGetMetricsQueryKey = () => {
@@ -2970,15 +2845,15 @@ export const getPrometheusControllerGetMetricsQueryOptions = <
   query?: Partial<
     UseQueryOptions<Awaited<ReturnType<typeof prometheusControllerGetMetrics>>, TError, TData>
   >;
-  fetch?: RequestInit;
+  request?: SecondParameter<typeof authMutator>;
 }) => {
-  const { query: queryOptions, fetch: fetchOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getPrometheusControllerGetMetricsQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof prometheusControllerGetMetrics>>> = ({
     signal,
-  }) => prometheusControllerGetMetrics({ signal, ...fetchOptions });
+  }) => prometheusControllerGetMetrics({ signal, ...requestOptions });
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof prometheusControllerGetMetrics>>,
@@ -3008,7 +2883,7 @@ export function usePrometheusControllerGetMetrics<
         >,
         "initialData"
       >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -3028,7 +2903,7 @@ export function usePrometheusControllerGetMetrics<
         >,
         "initialData"
       >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -3040,7 +2915,7 @@ export function usePrometheusControllerGetMetrics<
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof prometheusControllerGetMetrics>>, TError, TData>
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -3053,7 +2928,7 @@ export function usePrometheusControllerGetMetrics<
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof prometheusControllerGetMetrics>>, TError, TData>
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof authMutator>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {

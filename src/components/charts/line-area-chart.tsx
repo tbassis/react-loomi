@@ -7,14 +7,15 @@ const Chart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
 });
 
-export function LineAreaChart() {
-  const series = [
-    {
-      name: "KPI",
-      data: [10, 18, 15, 25, 30, 28, 35, 12, 34, 54, 23, 12],
-    },
-  ];
+type Props = {
+  labels: string[];
+  series: {
+    name: string;
+    data: number[];
+  }[];
+};
 
+export function LineAreaChart({ labels, series }: Props) {
   const options: ApexOptions = {
     chart: {
       type: "area",
@@ -38,23 +39,10 @@ export function LineAreaChart() {
     },
     colors: ["#4DD4CE"],
     xaxis: {
-      categories: [
-        "Jan",
-        "Fev",
-        "Mar",
-        "Abr",
-        "Mai",
-        "Jun",
-        "Jul",
-        "Ago",
-        "Set",
-        "Out",
-        "Nov",
-        "Dez",
-      ],
+      categories: labels,
       labels: {
         style: {
-          colors: "#9CA3AF", // cinza
+          colors: "#9CA3AF",
           fontSize: "12px",
         },
       },
@@ -65,7 +53,7 @@ export function LineAreaChart() {
           colors: "#9CA3AF",
           fontSize: "12px",
         },
-        formatter: (value) => `${value}`, // pode customizar
+        formatter: (value) => `${value}`,
       },
     },
     dataLabels: {
