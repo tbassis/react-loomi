@@ -2,8 +2,9 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0b1125; /* ← Mude para a cor que você quer */
-  --foreground: #ffffff; /* Cor do texto clara para contraste */
+  --on-background: #20273e;
+  --background: #0b1125;
+  --foreground: #ffffff;
 
   /* Defina suas cores customizadas aqui */
   --color-primary: #1876d2;
@@ -13,6 +14,7 @@
 }
 
 @theme inline {
+  --color-on-background: var(--on-background);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-primary: var(--color-primary);
