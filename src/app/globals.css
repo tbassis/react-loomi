@@ -1,5 +1,6 @@
 /* app/globals.css */
 @import "tailwindcss";
+@import "ol/ol.css";
 
 :root {
   --on-background: #20273e;
