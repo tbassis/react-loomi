@@ -48,6 +48,11 @@ export type loginRestControllerExecuteResponse200 = {
   status: 200;
 };
 
+export type loginRestControllerExecuteResponse201 = {
+  data: ResponseLogin;
+  status: 201;
+};
+
 export type loginRestControllerExecuteResponse400 = {
   data: void;
   status: 400;
@@ -63,7 +68,10 @@ export type loginRestControllerExecuteResponse422 = {
   status: 422;
 };
 
-export type loginRestControllerExecuteResponseSuccess = loginRestControllerExecuteResponse200 & {
+export type loginRestControllerExecuteResponseSuccess = (
+  | loginRestControllerExecuteResponse200
+  | loginRestControllerExecuteResponse201
+) & {
   headers: Headers;
 };
 export type loginRestControllerExecuteResponseError = (
@@ -79,7 +87,7 @@ export type loginRestControllerExecuteResponse =
   | loginRestControllerExecuteResponseError;
 
 export const getLoginRestControllerExecuteUrl = () => {
-  return `/auth/login`;
+  return `https://nortus-challenge.api.stage.loomi.com.br/auth/login`;
 };
 
 export const loginRestControllerExecute = async (
@@ -207,7 +215,7 @@ export type refreshTokenRestControllerExecuteResponse =
   | refreshTokenRestControllerExecuteResponseError;
 
 export const getRefreshTokenRestControllerExecuteUrl = () => {
-  return `/auth/refresh-token`;
+  return `https://nortus-challenge.api.stage.loomi.com.br/auth/refresh-token`;
 };
 
 export const refreshTokenRestControllerExecute = async (
@@ -339,7 +347,7 @@ export type createForgotPasswordRestControllerExecuteResponse =
   | createForgotPasswordRestControllerExecuteResponseError;
 
 export const getCreateForgotPasswordRestControllerExecuteUrl = () => {
-  return `/auth/forgot-password`;
+  return `https://nortus-challenge.api.stage.loomi.com.br/auth/forgot-password`;
 };
 
 export const createForgotPasswordRestControllerExecute = async (
@@ -474,7 +482,7 @@ export type updateForgotPasswordRestControllerExecuteResponse =
   | updateForgotPasswordRestControllerExecuteResponseError;
 
 export const getUpdateForgotPasswordRestControllerExecuteUrl = (id: unknown) => {
-  return `/auth/forgot-password/${id}`;
+  return `https://nortus-challenge.api.stage.loomi.com.br/auth/forgot-password/${id}`;
 };
 
 export const updateForgotPasswordRestControllerExecute = async (
@@ -602,7 +610,7 @@ export type createUserControllerExecuteResponse =
   | createUserControllerExecuteResponseError;
 
 export const getCreateUserControllerExecuteUrl = () => {
-  return `/users`;
+  return `https://nortus-challenge.api.stage.loomi.com.br/users`;
 };
 
 export const createUserControllerExecute = async (
@@ -715,7 +723,7 @@ export type deleteUserControllerExecuteResponse =
   | deleteUserControllerExecuteResponseError;
 
 export const getDeleteUserControllerExecuteUrl = (id: unknown) => {
-  return `/users/${id}`;
+  return `https://nortus-challenge.api.stage.loomi.com.br/users/${id}`;
 };
 
 export const deleteUserControllerExecute = async (
@@ -842,7 +850,7 @@ export type getUserByIdControllerExecuteResponse =
   | getUserByIdControllerExecuteResponseError;
 
 export const getGetUserByIdControllerExecuteUrl = (id: unknown) => {
-  return `/users/${id}`;
+  return `https://nortus-challenge.api.stage.loomi.com.br/users/${id}`;
 };
 
 export const getUserByIdControllerExecute = async (
@@ -861,7 +869,7 @@ export const getUserByIdControllerExecute = async (
 };
 
 export const getGetUserByIdControllerExecuteQueryKey = (id?: unknown) => {
-  return [`/users/${id}`] as const;
+  return [`https://nortus-challenge.api.stage.loomi.com.br/users/${id}`] as const;
 };
 
 export const getGetUserByIdControllerExecuteQueryOptions = <
@@ -1027,7 +1035,7 @@ export type updateUserByIdControllerExecuteResponse =
   | updateUserByIdControllerExecuteResponseError;
 
 export const getUpdateUserByIdControllerExecuteUrl = (id: unknown) => {
-  return `/users/${id}`;
+  return `https://nortus-challenge.api.stage.loomi.com.br/users/${id}`;
 };
 
 export const updateUserByIdControllerExecute = async (
@@ -1161,7 +1169,7 @@ export type getUserByEmailControllerExecuteResponse =
   | getUserByEmailControllerExecuteResponseError;
 
 export const getGetUserByEmailControllerExecuteUrl = (email: unknown) => {
-  return `/users/by-email/${email}`;
+  return `https://nortus-challenge.api.stage.loomi.com.br/users/by-email/${email}`;
 };
 
 export const getUserByEmailControllerExecute = async (
@@ -1184,7 +1192,7 @@ export const getUserByEmailControllerExecute = async (
 };
 
 export const getGetUserByEmailControllerExecuteQueryKey = (email?: unknown) => {
-  return [`/users/by-email/${email}`] as const;
+  return [`https://nortus-challenge.api.stage.loomi.com.br/users/by-email/${email}`] as const;
 };
 
 export const getGetUserByEmailControllerExecuteQueryOptions = <
@@ -1330,7 +1338,7 @@ export type hardDeleteUserControllerExecuteResponse =
   | hardDeleteUserControllerExecuteResponseError;
 
 export const getHardDeleteUserControllerExecuteUrl = (id: unknown) => {
-  return `/users/testing/${id}`;
+  return `https://nortus-challenge.api.stage.loomi.com.br/users/testing/${id}`;
 };
 
 export const hardDeleteUserControllerExecute = async (
@@ -1445,7 +1453,7 @@ export type getChatControllerExecuteResponse =
   | getChatControllerExecuteResponseError;
 
 export const getGetChatControllerExecuteUrl = () => {
-  return `/nortus-v1/chat`;
+  return `https://nortus-challenge.api.stage.loomi.com.br/nortus-v1/chat`;
 };
 
 export const getChatControllerExecute = async (
@@ -1463,7 +1471,7 @@ export const getChatControllerExecute = async (
 };
 
 export const getGetChatControllerExecuteQueryKey = () => {
-  return [`/nortus-v1/chat`] as const;
+  return [`https://nortus-challenge.api.stage.loomi.com.br/nortus-v1/chat`] as const;
 };
 
 export const getGetChatControllerExecuteQueryOptions = <
@@ -1602,7 +1610,7 @@ export type getDashboardControllerExecuteResponse =
   | getDashboardControllerExecuteResponseError;
 
 export const getGetDashboardControllerExecuteUrl = () => {
-  return `/nortus-v1/dashboard`;
+  return `https://nortus-challenge.api.stage.loomi.com.br/nortus-v1/dashboard`;
 };
 
 export const getDashboardControllerExecute = async (
@@ -1624,7 +1632,7 @@ export const getDashboardControllerExecute = async (
 };
 
 export const getGetDashboardControllerExecuteQueryKey = () => {
-  return [`/nortus-v1/dashboard`] as const;
+  return [`https://nortus-challenge.api.stage.loomi.com.br/nortus-v1/dashboard`] as const;
 };
 
 export const getGetDashboardControllerExecuteQueryOptions = <
@@ -1763,7 +1771,7 @@ export type getSimuladorPlanosControllerExecuteResponse =
   | getSimuladorPlanosControllerExecuteResponseError;
 
 export const getGetSimuladorPlanosControllerExecuteUrl = () => {
-  return `/nortus-v1/simulador-planos`;
+  return `https://nortus-challenge.api.stage.loomi.com.br/nortus-v1/simulador-planos`;
 };
 
 export const getSimuladorPlanosControllerExecute = async (
@@ -1785,7 +1793,7 @@ export const getSimuladorPlanosControllerExecute = async (
 };
 
 export const getGetSimuladorPlanosControllerExecuteQueryKey = () => {
-  return [`/nortus-v1/simulador-planos`] as const;
+  return [`https://nortus-challenge.api.stage.loomi.com.br/nortus-v1/simulador-planos`] as const;
 };
 
 export const getGetSimuladorPlanosControllerExecuteQueryOptions = <
@@ -1946,7 +1954,7 @@ export type createTicketControllerExecuteResponse =
   | createTicketControllerExecuteResponseError;
 
 export const getCreateTicketControllerExecuteUrl = () => {
-  return `/tickets`;
+  return `https://nortus-challenge.api.stage.loomi.com.br/tickets`;
 };
 
 export const createTicketControllerExecute = async (
@@ -2065,7 +2073,7 @@ export type listTicketsByFilterControllerExecuteResponse =
   | listTicketsByFilterControllerExecuteResponseError;
 
 export const getListTicketsByFilterControllerExecuteUrl = () => {
-  return `/tickets`;
+  return `https://nortus-challenge.api.stage.loomi.com.br/tickets`;
 };
 
 export const listTicketsByFilterControllerExecute = async (
@@ -2087,7 +2095,7 @@ export const listTicketsByFilterControllerExecute = async (
 };
 
 export const getListTicketsByFilterControllerExecuteQueryKey = () => {
-  return [`/tickets`] as const;
+  return [`https://nortus-challenge.api.stage.loomi.com.br/tickets`] as const;
 };
 
 export const getListTicketsByFilterControllerExecuteQueryOptions = <
@@ -2256,7 +2264,7 @@ export type getTicketByIdControllerExecuteResponse =
   | getTicketByIdControllerExecuteResponseError;
 
 export const getGetTicketByIdControllerExecuteUrl = (id: unknown) => {
-  return `/tickets/${id}`;
+  return `https://nortus-challenge.api.stage.loomi.com.br/tickets/${id}`;
 };
 
 export const getTicketByIdControllerExecute = async (
@@ -2279,7 +2287,7 @@ export const getTicketByIdControllerExecute = async (
 };
 
 export const getGetTicketByIdControllerExecuteQueryKey = (id?: unknown) => {
-  return [`/tickets/${id}`] as const;
+  return [`https://nortus-challenge.api.stage.loomi.com.br/tickets/${id}`] as const;
 };
 
 export const getGetTicketByIdControllerExecuteQueryOptions = <
@@ -2445,7 +2453,7 @@ export type updateTicketControllerExecuteResponse =
   | updateTicketControllerExecuteResponseError;
 
 export const getUpdateTicketControllerExecuteUrl = (id: unknown) => {
-  return `/tickets/${id}`;
+  return `https://nortus-challenge.api.stage.loomi.com.br/tickets/${id}`;
 };
 
 export const updateTicketControllerExecute = async (
@@ -2565,7 +2573,7 @@ export type deleteTicketControllerExecuteResponse =
   | deleteTicketControllerExecuteResponseError;
 
 export const getDeleteTicketControllerExecuteUrl = (id: unknown) => {
-  return `/tickets/${id}`;
+  return `https://nortus-challenge.api.stage.loomi.com.br/tickets/${id}`;
 };
 
 export const deleteTicketControllerExecute = async (
@@ -2681,7 +2689,7 @@ export type seedTicketsControllerExecuteResponse =
   | seedTicketsControllerExecuteResponseError;
 
 export const getSeedTicketsControllerExecuteUrl = () => {
-  return `/seed/tickets`;
+  return `https://nortus-challenge.api.stage.loomi.com.br/seed/tickets`;
 };
 
 export const seedTicketsControllerExecute = async (
@@ -2789,7 +2797,7 @@ export type getMapaControllerExecuteResponse =
   | getMapaControllerExecuteResponseError;
 
 export const getGetMapaControllerExecuteUrl = () => {
-  return `/map/locations`;
+  return `https://nortus-challenge.api.stage.loomi.com.br/map/locations`;
 };
 
 export const getMapaControllerExecute = async (
@@ -2807,7 +2815,7 @@ export const getMapaControllerExecute = async (
 };
 
 export const getGetMapaControllerExecuteQueryKey = () => {
-  return [`/map/locations`] as const;
+  return [`https://nortus-challenge.api.stage.loomi.com.br/map/locations`] as const;
 };
 
 export const getGetMapaControllerExecuteQueryOptions = <
@@ -2930,7 +2938,7 @@ export type prometheusControllerGetMetricsResponseSuccess =
 export type prometheusControllerGetMetricsResponse = prometheusControllerGetMetricsResponseSuccess;
 
 export const getPrometheusControllerGetMetricsUrl = () => {
-  return `/metrics`;
+  return `https://nortus-challenge.api.stage.loomi.com.br/metrics`;
 };
 
 export const prometheusControllerGetMetrics = async (
@@ -2952,7 +2960,7 @@ export const prometheusControllerGetMetrics = async (
 };
 
 export const getPrometheusControllerGetMetricsQueryKey = () => {
-  return [`/metrics`] as const;
+  return [`https://nortus-challenge.api.stage.loomi.com.br/metrics`] as const;
 };
 
 export const getPrometheusControllerGetMetricsQueryOptions = <

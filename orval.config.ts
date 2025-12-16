@@ -1,4 +1,4 @@
-// orval.config.ts
+import "dotenv/config";
 import { defineConfig } from "orval";
 
 export default defineConfig({
@@ -9,11 +9,12 @@ export default defineConfig({
     output: {
       mode: "split",
       client: "react-query",
-      httpClient: "ky",
+      httpClient: "fetch",
       target: "./src/api/generated.ts",
       schemas: "./src/api/model",
       prettier: true,
       clean: true,
+      baseUrl: process.env.NEXT_PUBLIC_API_URL,
     },
   },
 });
