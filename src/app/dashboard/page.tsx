@@ -1,0 +1,17 @@
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+
+export default function DashboardPage() {
+  const token = cookies().get("access_token");
+
+  if (!token) {
+    redirect("/login");
+  }
+
+  return (
+    <div className="p-6">
+      <h1 className="text-xl font-bold">Dashboard</h1>
+      <p>Usuário autenticado</p>
+    </div>
+  );
+}
