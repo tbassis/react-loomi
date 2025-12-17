@@ -1,26 +1,38 @@
+/* app/globals.css */
 @import "tailwindcss";
+@import "ol/ol.css";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --on-background: #20273e;
+  --background: #0b1125;
+  --foreground: #ffffff;
+
+  /* Defina suas cores customizadas aqui */
+  --color-primary: #1876d2;
+  --color-secondary: #ffed4a;
+  --color-danger: #e3342f;
+  --color-dark-bg: #0b1125;
 }
 
 @theme inline {
+  --color-on-background: var(--on-background);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-primary: var(--color-primary);
+  --color-secondary: var(--color-secondary);
+  --color-danger: var(--color-danger);
+  --color-dark-bg: var(--color-dark-bg);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --radius-lg: 20px;
+
+  --font-size-xl: 2.1875rem;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }

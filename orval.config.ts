@@ -1,0 +1,26 @@
+import "dotenv/config";
+import { defineConfig } from "orval";
+
+export default defineConfig({
+  api: {
+    input: {
+      target: "./swagger.json",
+    },
+    output: {
+      mode: "split",
+      client: "react-query",
+      httpClient: "fetch",
+      override: {
+        mutator: {
+          path: "./src/lib/auth-mutator.ts",
+          name: "authMutator",
+        },
+      },
+      target: "./src/api/generated.ts",
+      schemas: "./src/api/model",
+      prettier: true,
+      clean: true,
+      baseUrl: process.env.NEXT_PUBLIC_API_URL,
+    },
+  },
+});
