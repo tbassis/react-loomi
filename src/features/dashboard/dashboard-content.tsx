@@ -3,7 +3,7 @@
 import { LineAreaChart } from "@/components/charts/line-area-chart";
 import { BarChart } from "@/components/charts/bar-chart";
 import { KpiToggleButton } from "@/components/ui/kpi-toggle-button";
-import { useDashboardCharts } from "@/features/dashboard/hooks/use-dashboard-charts";
+import { useDashboardCharts } from "@/features/dashboard/use-dashboard-charts";
 import { MapSection } from "@/components/map/map-section";
 
 type KpiKey = "arpu" | "conversion" | "churn" | "retention";
