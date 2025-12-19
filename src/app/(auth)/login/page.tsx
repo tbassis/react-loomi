@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 
 import { loginSchema, LoginFormData } from "@/features/auth/login.schema";
-import { useLogin } from "@/features/auth/use-login.hook";
+import { useLogin } from "@/features/auth/use-login";
 
 export default function LoginPage() {
   const { login, isLoading } = useLogin();
