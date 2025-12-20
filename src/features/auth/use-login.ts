@@ -1,30 +1,25 @@
 import { useRouter } from "next/navigation";
-import { useLoginRestControllerExecute } from "@/api/generated";
-import { handleLoginSuccess } from "./auth.service";
 import { LoginFormData } from "./login.schema";
 
 export function useLogin() {
   const router = useRouter();
 
-  const mutation = useLoginRestControllerExecute({
-    mutation: {
-      onSuccess: (response, variables) => {
-        if (response.status !== 201) return;
+  async function login(data: LoginFormData) {
+    const response = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
 
-        handleLoginSuccess(response.data.access_token, variables.data.email);
+    if (!response.ok) {
+      throw new Error("Erro ao autenticar");
+    }
 
-        router.push("/dashboard");
-      },
-    },
-  });
-
-  function login(data: LoginFormData) {
-    mutation.mutate({ data });
+    router.push("/dashboard");
   }
 
   return {
     login,
-    isLoading: mutation.isPending,
-    error: mutation.error,
+    isLoading: false,
   };
 }
